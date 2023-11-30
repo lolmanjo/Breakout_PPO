@@ -368,6 +368,9 @@ FodyWeavers.xsd
 /checkpoints
 /logs
 
+# Ignore linux executable
+/Breakout_PPO.out
+
 # Ignore dlls
 /asmjit.dll
 /c10.dll
@@ -440,3 +443,4 @@ FodyWeavers.xsd
 /libtorch_cuda_linalg.so
 /libtorch_global_deps.so
 /libtorch_python.so
+/libale.a
