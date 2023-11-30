@@ -19,25 +19,27 @@ bool TrainingControllerEpisodic::onNextScenarioRequired(bool isInit) {
 
 	} else {
 		// An episode ended. 
-
-		//if(getEnvironment()->onlyFinalReward()) {
-		//	for(Agent* agent : getAgents()) {
-		//		// TODO: Breakout scheint doch zwischendurch die Punkte zu vergeben. Ist was anderes als der Score, welcher nur am Ende vergeben wird. 
-		//		// Prepare rewards. 
-		//		// Count rewards in this episode. 
-		//		double episodeReward = 0.0;
-		//		for(uint32_t i = 0; i < getStepsInThisEpisode(); i++) {
-		//			episodeReward += agent->rewards[agent->rewardsCount - getStepsInThisEpisode() + i];
-		//		}
-		//		if(episodeReward > 0.0) {
-		//			// Set reward for all steps in this episode to the accumulated reward of this episode. 
-		//			for(uint32_t i = 0; i < getStepsInThisEpisode(); i++) {
-		//				agent->rewards[agent->rewardsCount - getStepsInThisEpisode() - 1 + i] = episodeReward;
-		//			}
-		//		}
-		//	}
-		//}
 		setTrainedEpisodes(getTrainedEpisodes() + 1);
+
+		// Log episode reward of agents and maybe manipulate reward values. 
+		for(Agent* agent : getAgents()) {
+			// Count rewards in this episode ("episode reward"). 
+			double episodeReward = 0.0;
+			for(uint32_t i = 0; i < getStepsInThisEpisode(); i++) {
+				episodeReward += agent->rewards[agent->rewardsCount - getStepsInThisEpisode() + i];
+			}
+
+			// Log episode rewards. 
+			TrainingLogger::onAgentRewarded(agent->agentID, episodeReward);
+
+			// If the environment only gives a reward at the end, modify reward values. 
+			if(getEnvironment()->onlyFinalReward() && episodeReward > 0.0) {
+				// Set reward for all steps in this episode to the episode reward. 
+				for(uint32_t i = 0; i < getStepsInThisEpisode(); i++) {
+					agent->rewards[agent->rewardsCount - getStepsInThisEpisode() - 1 + i] = episodeReward;
+				}
+			}
+		}
 
 		episodesTillOptimization--;
 		// Check whether its time for an optimization step. 
@@ -217,9 +219,6 @@ void TrainingControllerEpisodic::rewardAgent(Agent* agent, bool didTakeAction, E
 	agent->rewards.push_back(reward);
 	agent->totalReward += reward;
 	agent->rewardsCount++;
-
-	// Log reward. 
-	TrainingLogger::onAgentRewarded(agent->agentID, reward);
 }
 
 void TrainingControllerEpisodic::resetAgentTrainingStep(Agent* agent) {

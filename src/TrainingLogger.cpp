@@ -116,7 +116,7 @@ void TrainingLogger::onAgentRewarded(AGENT_ID agentID, double reward) {
 	if(!LOG_REWARDS) {
 		return;
 	}
-	appendLineToFile("Agent \"" + std::to_string(agentID) + "\", reward=\"" + std::to_string(reward) + "\"", false);
+	appendLineToFile("Agent \"" + std::to_string(agentID) + "\", reward=\"" + std::to_string(reward) + "\"");
 }
 
 void TrainingLogger::onAgentTrained(AGENT_ID agentID, double totalReward) {
