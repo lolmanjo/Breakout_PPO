@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="AEX::ArrayList&lt;*&gt;">
+    <DisplayString>{{ Size={currentSize} }}</DisplayString>
+    <Expand>
+      <Item Name="[Size]">currentSize</Item>
+      <Item Name="[Capacity]">dataSize</Item>
+      <ArrayItems Condition="data != nullptr">
+        <Size>currentSize</Size>
+        <ValuePointer>data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="AEX::LinkedList&lt;*&gt;">
+    <DisplayString>{{ Size={currentSize} }}</DisplayString>
+    <Expand>
+      <Item Name="[Size]">currentSize</Item>
+      <LinkedListItems Condition="first != nullptr">
+        <Size>currentSize</Size>
+        <HeadPointer>first</HeadPointer>
+        <NextPointer>child</NextPointer>
+        <ValueNode>data</ValueNode>
+      </LinkedListItems>
+    </Expand>
+  </Type>
+  <Type Name="AEX::HashMap&lt;*,*&gt;">
+    <DisplayString>{{ Size={currentSize} }}</DisplayString>
+    <Expand>
+      <Item Name="[Size]">currentSize</Item>
+      <Item Name="[Capacity]">dataSize</Item>
+      <CustomListItems Condition="data != nullptr">
+        <Variable Name="index" InitialValue="0"/>
+        <Variable Name="itemIndex" InitialValue="0"/>
+        <Variable Name="currentSubtree" InitialValue="data[0]"/>
+        <Size>currentSize</Size>
+        <Loop Condition="index &lt; dataSize">
+            <If Condition="data[index] != nullptr">
+                <Item Name="{itemIndex}">data[index]->entry</Item>
+                <Exec>itemIndex++</Exec>
+                <Exec>currentSubtree = data[index]->child</Exec>
+                <Loop Condition="currentSubtree != nullptr">
+                    <Item Name="{itemIndex}">currentSubtree->entry</Item>
+                    <Exec>itemIndex++</Exec>
+                    <Exec>currentSubtree = currentSubtree->child</Exec>
+                </Loop>
+            </If>
+            <Exec>index++</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+</AutoVisualizer>

@@ -1,0 +1,17 @@
+{
+  "parameters": {
+    "checkpointDirectoryName": "checkpoints",
+    "modelNameLoad": "Breakout-AC-PPO-v1",
+    "modelNameSave": "Breakout-AC-PPO-v1",
+    "learningRate": 0.001,
+    "policyStepLength": 1,
+    "trainingStepLength": 5,
+    "maxEpisodeLength": 120000,
+    "episodesPerCheckpoint": 100,
+    "maxEpisodes": 1000,
+    "continueLogFile": true,
+    "ppo_gamma": 0.99,
+    "ppo_lambda": 0.95,
+    "ppo_epochs": 1
+  }
+}
