@@ -362,9 +362,11 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Ignore libs and roms
+# Ignore libs, roms, checkpoints and logs
 /lib
 /roms
+/checkpoints
+/logs
 
 # Ignore dlls
 /asmjit.dll
@@ -403,3 +405,35 @@ FodyWeavers.xsd
 /ale.lib
 /zlib.lib
 /zlib1.dll
+
+# Ignore linux "dlls"
+/libbackend_with_compiler.so
+/libc10.so
+/libc10d_cuda_test.so
+/libc10_cuda.so
+/libcaffe2_nvrtc.so
+/libcublas-3b81d170.so.11
+/libcublasLt-b6d14a74.so.11
+/libcudart-d0da41ae.so.11.0
+/libcudnn.so.8
+/libcudnn_adv_infer.so.8
+/libcudnn_adv_train.so.8
+/libcudnn_cnn_infer.so.8
+/libcudnn_cnn_train.so.8
+/libcudnn_ops_infer.so.8
+/libcudnn_ops_train.so.8
+/libdiscord-rpc.so
+/libgomp-52f2fd74.so.1
+/libjitbackend_test.so
+/libnnapi_backend.so
+/libnvfuser_codegen.so
+/libnvrtc-672ee683.so.11.2
+/libnvrtc-builtins-2dc4bf68.so.11.8
+/libnvToolsExt-847d78f2.so.1
+/libopenal.so.1
+/libshm.so
+/libsteam_api.so
+/libtorch.so
+/libtorchbind_test.so
+/libtorch_cpu.so
+/libtorch_cuda.so
