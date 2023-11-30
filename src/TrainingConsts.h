@@ -20,11 +20,7 @@
 #include <vector>
 #include <chrono>
 
-#ifdef _WIN32
 #include <ale/ale_interface.hpp>
-#elif __linux__
-#include <ale_interface.hpp>
-#endif
 
 //#define MEASURE_TIME
 //#define MEASURE_TIME_GOAL
