@@ -437,3 +437,6 @@ FodyWeavers.xsd
 /libtorchbind_test.so
 /libtorch_cpu.so
 /libtorch_cuda.so
+/libtorch_cuda_linalg.so
+/libtorch_global_deps.so
+/libtorch_python.so
