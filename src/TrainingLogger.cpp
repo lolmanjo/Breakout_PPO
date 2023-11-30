@@ -54,9 +54,20 @@ void TrainingLogger::ensureTmpDirectory() {
 std::string TrainingLogger::getLogDate() {
 	time_t now = time(0);
 	tm result;
+#ifdef _WIN32
 	localtime_s(&result, &now);
+#elif __linux__
+	localtime_r(&now, &result);
+#endif
 	char formattedData[22];
+#ifdef __linux__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation="
+#endif
 	snprintf(formattedData, sizeof(formattedData), "%02d.%02d.%04d : %02d.%02d.%02d", result.tm_mday, 1 + result.tm_mon, 1900 + result.tm_year, result.tm_hour, result.tm_min, result.tm_sec);
+#ifdef __linux__
+#pragma GCC diagnostic pop
+#endif
 	return std::string(formattedData);
 }
 
