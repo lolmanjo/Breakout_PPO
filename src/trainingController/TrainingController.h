@@ -62,7 +62,7 @@ namespace PLANS {
 		public:
 			static TrainingController* getInstance();
 
-			~TrainingController();
+			virtual ~TrainingController();
 
 			// Called from TrainMain.cpp on application start. 
 			bool init();

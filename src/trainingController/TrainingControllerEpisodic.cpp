@@ -7,10 +7,12 @@
 #include "../util/Maths.h"
 #include "../Models.h"
 #include "../TrainingLogger.h"
+#include "../util/HTTPHelper.h"
 
 using namespace PLANS;
+using namespace AEX;
 
-TrainingControllerEpisodic::TrainingControllerEpisodic(TrainingParameters* parameters, Environment* enviroment) : TrainingController(parameters, enviroment), stepsTillAction(), episodesTillOptimization(), episodesTillCheckpoint() {}
+TrainingControllerEpisodic::TrainingControllerEpisodic(TrainingParameters* parameters, Environment* enviroment) : TrainingController(parameters, enviroment), stepsTillAction(), episodesTillOptimization(), episodesTillCheckpoint(), lastEpisodeRewards() {}
 
 bool TrainingControllerEpisodic::onNextScenarioRequired(bool isInit) {
 	if(isInit) {
@@ -27,6 +29,19 @@ bool TrainingControllerEpisodic::onNextScenarioRequired(bool isInit) {
 			double episodeReward = 0.0;
 			for(uint32_t i = 0; i < getStepsInThisEpisode(); i++) {
 				episodeReward += agent->rewards[agent->rewardsCount - getStepsInThisEpisode() + i];
+			}
+
+			// If agents ID is 0, post average of last 100 episode rewards. 
+			if(agent->agentID == 0) {
+				lastEpisodeRewards.add(episodeReward);
+				if(lastEpisodeRewards.size() > 100) {
+					// Remove oldest value. 
+					lastEpisodeRewards.removeIndex(0);
+					// Calculate average. 
+					double average = calculateAverage(lastEpisodeRewards);
+					// Post average. 
+					HTTPHelper::postRewardAverage(average);
+				}
 			}
 
 			// Log episode rewards. 
@@ -229,4 +244,16 @@ void TrainingControllerEpisodic::resetAgentTrainingStep(Agent* agent) {
 	agent->rewards.clear();
 	agent->totalReward = 0.0;
 	agent->rewardsCount = 0;
+}
+
+double TrainingControllerEpisodic::calculateAverage(const ArrayList<double>& values) const {
+	if(values.isEmpty()) {
+		return 0.0;
+	}
+	double sum = 0.0;
+	for(double d : values) {
+		sum += d;
+	}
+	sum /= values.size();
+	return sum;
 }
