@@ -362,11 +362,12 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Ignore libs, roms, checkpoints and logs
+# Ignore libs, roms, checkpoints, logs and external sources
 /lib
 /roms
 /checkpoints
 /logs
+/external_sources
 
 # Ignore linux executable
 /Breakout_PPO.out
