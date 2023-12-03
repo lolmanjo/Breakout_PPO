@@ -28,6 +28,31 @@ namespace PLANS {
     
     TORCH_MODULE(ActorCritic);
 
+    //############################ ActorCritic2Impl ############################
+    
+    // Network model for Proximal Policy Optimization on Incy Wincy.
+    struct ActorCritic2Impl : public torch::nn::Module {
+        // Actor.
+        torch::nn::Conv1d a_conv1_, a_conv2_;
+        torch::nn::Linear a_lin1_, a_lin2_;
+        torch::Tensor mu_;
+        torch::Tensor log_std_;
+    
+        // Critic.
+        torch::nn::Linear c_lin1_, c_lin2_, c_val_;
+    
+        ActorCritic2Impl(double std);
+
+        // Returned tuple: [0]: Actor output of size 1, [1]: Critic output of size 1. 
+        std::tuple<torch::Tensor, torch::Tensor> forward(const torch::Tensor& inputTensor, bool b);
+        void normal(double mu, double std);
+        torch::Tensor entropy();
+        torch::Tensor logProb(const torch::Tensor& action);
+        void toDevice(torch::DeviceType device);
+    };
+    
+    TORCH_MODULE(ActorCritic2);
+
     //############################ ActorCriticOpenAIFiveImpl ############################
 
     // A model based on the structure of OpenAI Five. A single LSTM whichs outputs are passed into linear projections to produce the action and value outputs. 

@@ -8,17 +8,17 @@ using namespace PLANS;
 
 ActorCriticImpl::ActorCriticImpl(double std)
     : // Actor.
-    a_lin1_(torch::nn::Linear(LSTM_INPUT_SIZE, 16)),
-    a_lin2_(torch::nn::Linear(16, 32)),
+    a_lin1_(torch::nn::Linear(LSTM_INPUT_SIZE, 64)),
+    a_lin2_(torch::nn::Linear(64, 32)),
     a_lin3_(torch::nn::Linear(32, LSTM_OUTPUT_SIZE)),
     mu_(torch::full(LSTM_OUTPUT_SIZE, 0.)),
     log_std_(torch::full(LSTM_OUTPUT_SIZE, std)),
 
     // Critic
-    c_lin1_(torch::nn::Linear(LSTM_INPUT_SIZE, 16)),
-    c_lin2_(torch::nn::Linear(16, 32)),
-    c_lin3_(torch::nn::Linear(32, LSTM_OUTPUT_SIZE)),
-    c_val_(torch::nn::Linear(LSTM_OUTPUT_SIZE, 1)) {
+    c_lin1_(torch::nn::Linear(LSTM_INPUT_SIZE, 32)),
+    c_lin2_(torch::nn::Linear(32, 32)),
+    c_lin3_(torch::nn::Linear(32, 16)),
+    c_val_(torch::nn::Linear(16, 1)) {
     // Register the modules.
     register_module("a_lin1", a_lin1_);
     register_module("a_lin2", a_lin2_);
@@ -71,6 +71,76 @@ torch::Tensor ActorCriticImpl::logProb(const torch::Tensor& action) {
 }
 
 void ActorCriticImpl::toDevice(torch::DeviceType device) {
+    to(device);
+}
+
+//############################ ActorCritic2Impl ############################
+
+ActorCritic2Impl::ActorCritic2Impl(double std)
+    : // Actor.
+    a_conv1_(torch::nn::Conv1d(LSTM_INPUT_SIZE, 64, 2)),
+    a_conv2_(torch::nn::Conv1d(64, 64, 1)),
+    a_lin1_(torch::nn::Linear(32, 16)),
+    a_lin2_(torch::nn::Linear(16, LSTM_OUTPUT_SIZE)),
+    mu_(torch::full(LSTM_OUTPUT_SIZE, 0.)),
+    log_std_(torch::full(LSTM_OUTPUT_SIZE, std)),
+
+    // Critic
+    c_lin1_(torch::nn::Linear(LSTM_INPUT_SIZE, 16)),
+    c_lin2_(torch::nn::Linear(32, LSTM_OUTPUT_SIZE)),
+    c_val_(torch::nn::Linear(LSTM_OUTPUT_SIZE, 1)) {
+    // Register the modules.
+    register_module("a_conv1_", a_conv1_);
+    register_module("a_conv2_", a_conv2_);
+    register_module("a_lin1", a_lin1_);
+    register_module("a_lin2", a_lin2_);
+    register_parameter("log_std", log_std_);
+
+    register_module("c_lin1", c_lin1_);
+    register_module("c_lin2", c_lin2_);
+    register_module("c_val", c_val_);
+}
+
+std::tuple<torch::Tensor, torch::Tensor> ActorCritic2Impl::forward(const torch::Tensor& inputTensor, bool b) {
+
+    // Actor.
+    mu_ = torch::relu(a_conv1_->forward(inputTensor));
+    mu_ = torch::relu(a_conv2_->forward(mu_));
+    mu_ = torch::relu(a_lin1_->forward(mu_));
+    mu_ = torch::relu(a_lin2_->forward(mu_));
+
+    // Critic.
+    torch::Tensor val = torch::relu(c_lin1_->forward(inputTensor));
+    val = torch::relu(c_lin2_->forward(val));
+    val = c_val_->forward(val);
+
+    torch::NoGradGuard no_grad;
+
+    torch::Tensor action = at::normal(mu_, log_std_.exp().expand_as(mu_));
+    return std::make_tuple(action, val);
+}
+
+void ActorCritic2Impl::normal(double mu, double std) {
+    torch::NoGradGuard no_grad;
+
+    for(auto& p : this->parameters()) {
+        p.normal_(mu, std);
+    }
+}
+
+torch::Tensor ActorCritic2Impl::entropy() {
+    // Differential entropy of normal distribution. For reference https://pytorch.org/docs/stable/_modules/torch/distributions/normal.html#Normal
+    return 0.5 + 0.5 * log(2 * M_PI) + log_std_;
+}
+
+torch::Tensor ActorCritic2Impl::logProb(const torch::Tensor& action) {
+    // Logarithmic probability of taken action, given the current distribution.
+    torch::Tensor var = (log_std_ + log_std_).exp();
+
+    return -((action - mu_) * (action - mu_)) / (2 * var) - log_std_ - log(sqrt(2 * M_PI));
+}
+
+void ActorCritic2Impl::toDevice(torch::DeviceType device) {
     to(device);
 }
 

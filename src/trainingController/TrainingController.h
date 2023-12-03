@@ -10,6 +10,8 @@ namespace PLANS {
 	// Determine which model to use. 
 	using Model = ActorCritic;
 	using ModelImpl = ActorCriticImpl;
+	//using Model = ActorCritic2;
+	//using ModelImpl = ActorCritic2Impl;
 	//using Model = ActorCriticOpenAIFive;
 	//using ModelImpl = ActorCriticOpenAIFiveImpl;
 
