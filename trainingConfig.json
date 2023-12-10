@@ -3,7 +3,7 @@
     "checkpointDirectoryName": "checkpoints_v3",
     "modelNameLoad": "Breakout-AC-PPO-v3",
     "modelNameSave": "Breakout-AC-PPO-v3",
-    "learningRate": 0.0001,
+    "learningRate": 0.0005,
     "policyStepLength": 1,
     "trainingStepLength": 4,
     "maxEpisodeLength": 120000,
@@ -12,6 +12,6 @@
     "continueLogFile": true,
     "ppo_gamma": 0.99,
     "ppo_lambda": 0.9,
-    "ppo_epochs": 2
+    "ppo_epochs": 4
   }
 }
