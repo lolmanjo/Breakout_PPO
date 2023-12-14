@@ -8,7 +8,7 @@
     "trainingStepLength": 4,
     "maxEpisodeLength": 120000,
     "episodesPerCheckpoint": 100,
-    "maxEpisodes": 300000,
+    "maxEpisodes": 600000,
     "continueLogFile": true,
     "ppo_gamma": 0.99,
     "ppo_lambda": 0.9,
