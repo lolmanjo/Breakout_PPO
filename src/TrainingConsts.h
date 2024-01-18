@@ -34,10 +34,11 @@ namespace PLANS {
 
 	constexpr uint32_t NUM_OF_AGENTS_DESIRED = 1;	// Not the actual amount, see NUM_OF_AGENTS. 
 
-	static const int64_t LSTM_INPUT_SIZE = 128;		// 795, increased to next multiple of 8. 
+	//static const int64_t LSTM_INPUT_SIZE = 128;
+	static const int64_t LSTM_INPUT_SIZE = 13;
 	static const int64_t LSTM_HIDDEN_SIZE = 8;
 
-	static const int64_t LSTM_OUTPUT_SIZE = 1;	// 6, increased to next multiple of 8. Also known as "projection size". If set to 0, TrainingController::LSTM_HIDDEN_SIZE is being used instead. 
+	static const int64_t LSTM_OUTPUT_SIZE = 1;	// Also known as "projection size". If set to 0, TrainingController::LSTM_HIDDEN_SIZE is being used instead. 
 	static const int64_t LSTM_NUM_LAYERS = 1;
 	static const int64_t LSTM_SEQUENCE_LENGTH = 16;
 	// In LSTM context: How many samples / rewards are collected before a weight update. As the samples are triggered by the game loop, always 1. 

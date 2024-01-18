@@ -131,13 +131,20 @@ void EnvironmentBreakout::getInputData(AGENT_ID agentID, std::vector<float>& dat
 	//	data.push_back(static_cast<ale::pixel_t>(array[i]));
 	//}
 	
-	size_t arraySize = ram.size();
-	const ale::byte_t* array = ram.array();
-	for(size_t i = 0; i < arraySize; i++) {
-		data.push_back(static_cast<ale::byte_t>(array[i]));
-	}
+	//// Give whole ram as input. 
+	//size_t arraySize = ram.size();
+	//const ale::byte_t* array = ram.array();
+	//for(size_t i = 0; i < arraySize; i++) {
+	//	data.push_back(static_cast<ale::byte_t>(array[i]));
+	//}
 
-	//std::vector<int> features;
+	// Give selected values of the ram as input. Source: https://www.codeproject.com/Articles/5271949/Learning-Breakout-From-RAM-Part-1
+	int numOfValues = 13;
+	int valuesIndices[13] = {70, 71, 72, 74, 75, 90, 94, 95, 99, 101, 103, 105, 119};
+	// Gahter values. 
+	for(size_t i = 0; i < numOfValues; i++) {
+		data.push_back(ram.array()[valuesIndices[i]]);
+	}
 
 }
 
