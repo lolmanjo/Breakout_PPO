@@ -445,3 +445,4 @@ FodyWeavers.xsd
 /libtorch_global_deps.so
 /libtorch_python.so
 /libale.a
+*.checkpoint
