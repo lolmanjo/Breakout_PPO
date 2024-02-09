@@ -37,6 +37,10 @@ void EnvironmentBinary::getInputData(AGENT_ID agentID, std::vector<float>& data)
 	}
 }
 
+float EnvironmentBinary::getActionMax() {
+	return 2.0F;
+}
+
 void EnvironmentBinary::onAction(AGENT_ID agentID, float action) {
 	actions[agentID] = static_cast<uint8_t>(action);
 }
@@ -80,6 +84,10 @@ void EnvironmentFloat::getInputData(AGENT_ID agentID, std::vector<float>& data) 
 	for(int64_t i = 0; i < LSTM_INPUT_SIZE; i++) {
 		putIntoData(data, currIndex, state);
 	}
+}
+
+float EnvironmentFloat::getActionMax() {
+	return FLT_MAX;
 }
 
 void EnvironmentFloat::onAction(AGENT_ID agentID, float action) {
@@ -148,10 +156,15 @@ void EnvironmentBreakout::getInputData(AGENT_ID agentID, std::vector<float>& dat
 
 }
 
+float EnvironmentBreakout::getActionMax() {
+	return static_cast<float>(legal_actions.size());
+}
+
 void EnvironmentBreakout::onAction(AGENT_ID agentID, float action) {
 	//int actionInt = Maths::min(Maths::max(0, static_cast<int>(action)), 1);
 	//ale::Action a = legal_actions[actionInt + 3];
-	ale::Action a = legal_actions[Maths::min(Maths::max(0, static_cast<int>(action)), static_cast<int>(legal_actions.size() - 1))];
+	int actionIndex = Maths::clamp(static_cast<int>(action), 0, static_cast<int>(legal_actions.size() - 1));
+	ale::Action a = legal_actions[actionIndex];
 	reward = static_cast<float>(ale.act(a));
 }
 

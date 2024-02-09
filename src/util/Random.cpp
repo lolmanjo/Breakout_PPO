@@ -54,3 +54,11 @@ uint32_t Random::nextUInt(uint32_t bound) {
 int32_t Random::nextIntInRange(int32_t minimum, int32_t maximum) {
 	return minimum + static_cast<int32_t>(nextUInt(static_cast<uint32_t>(maximum - minimum + 1)));
 }
+
+float Random::nextFloat() {
+	return next(24) / static_cast<float>(1 << 24);
+}
+
+float Random::nextFloatInRange(float minimum, float maximum) {
+	return minimum + nextFloat() * (maximum - minimum);
+}

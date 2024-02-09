@@ -115,8 +115,17 @@ void TrainingLogger::onTrainingStarted(const TrainingParameters* trainingParamet
 	appendLineToFile(">policyStepLength	:	" + std::to_string(trainingParameters->policyStepLength));
 	appendLineToFile(">trainingStepLength	:	" + std::to_string(trainingParameters->trainingStepLength));
 	appendLineToFile(">maxEpisodeLength	:	" + std::to_string(trainingParameters->maxEpisodeLength));
+	appendLineToFile(">episodesPerCheckpoint	:	" + std::to_string(trainingParameters->episodesPerCheckpoint));
 	appendLineToFile(">maxEpisodes	:	" + std::to_string(trainingParameters->maxEpisodes));
 	appendLineToFile(">continueLogFile	:	" + std::string(trainingParameters->continueLogFile ? "true" : "false"));
+	appendLineToFile(">ppo_gamma	:	" + std::to_string(trainingParameters->ppo_gamma));
+	appendLineToFile(">ppo_lambda	:	" + std::to_string(trainingParameters->ppo_lambda));
+	appendLineToFile(">ppo_beta	:	" + std::to_string(trainingParameters->ppo_beta));
+	appendLineToFile(">ppo_epochs	:	" + std::to_string(trainingParameters->ppo_epochs));
+	appendLineToFile(">ppo_miniBatchSize	:	" + std::to_string(trainingParameters->ppo_miniBatchSize));
+	appendLineToFile(">epsilonGreedyEnabled	:	" + std::string(trainingParameters->epsilonGreedyEnabled ? "true" : "false"));
+	appendLineToFile(">epsilonGreedyStart	:	" + std::to_string(trainingParameters->epsilonGreedyStart));
+	appendLineToFile(">epsilonGreedyEnd	:	" + std::to_string(trainingParameters->epsilonGreedyEnd));
 }
 
 void TrainingLogger::onNextSzenarioSet(const std::string& additionalInfo) {

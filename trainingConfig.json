@@ -12,6 +12,9 @@
     "continueLogFile": true,
     "ppo_gamma": 0.99,
     "ppo_lambda": 0.9,
-    "ppo_epochs": 4
+    "ppo_epochs": 4,
+    "epsilonGreedyEnabled": true,
+    "epsilonGreedyStart": 0.5,
+    "epsilonGreedyEnd": 0.05
   }
 }

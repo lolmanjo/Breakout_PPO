@@ -20,7 +20,7 @@ int main(int argc, const char** argv) {
 	// Parse training parameters. 
 	TrainingParameters* parameters = new TrainingParameters();
 	TrainingParser::parseConfigFile("./trainingConfig.json", parameters);
-
+	
 	// Init environment. 
 	//Environment* enviroment = new EnvironmentBinary();
 	Environment* enviroment = new EnvironmentBreakout();
@@ -50,6 +50,10 @@ int main(int argc, const char** argv) {
 	bool episodeReachedMaxLength = false;
 	bool environmentCaused = false;
 	std::chrono::high_resolution_clock::time_point lastKeepAliveSent;
+	double currentEpisodeProgress = 0.0;
+	Random epsilonGreedyRandom;
+	double epsilonGreedyChanceGrowth = parameters->epsilonGreedyEnd > parameters->epsilonGreedyStart ? parameters->epsilonGreedyEnd - parameters->epsilonGreedyStart : parameters->epsilonGreedyStart - parameters->epsilonGreedyEnd;
+	double currentEpsilonGreedyChance = parameters->epsilonGreedyStart;
 	while(!stop) {
 		// Update environment. 
 		enviroment->update();
@@ -61,7 +65,23 @@ int main(int argc, const char** argv) {
 			actionTaken = trainingController->onActionRequired(agentID, output);
 
 			if(actionTaken) {
-				action = TrainingEncoder::decodeAction(agentID, output[0]);
+				// Determine whether an action based on the agents output or a random action should be taken. 
+				// For this to happen, epsilon greedy has to be enabled and the chance has to hit. 
+				bool randomAction = false;
+				if(parameters->epsilonGreedyEnabled) {
+					// Update currentEpsilonGreedyChance. 
+					currentEpsilonGreedyChance = Maths::clamp(parameters->epsilonGreedyStart + (epsilonGreedyChanceGrowth * currentEpisodeProgress), 0.0, 1.0);
+					//
+					randomAction = epsilonGreedyRandom.nextFloat() < currentEpsilonGreedyChance;
+
+				}
+				if(!randomAction) {
+					// Decode action based on agent output. 
+					action = TrainingEncoder::decodeAction(agentID, output[0]);
+				} else {
+					// Take a random action. 
+					action = epsilonGreedyRandom.nextFloatInRange(0.0F, enviroment->getActionMax());
+				}
 
 				// Execute action. 
 				enviroment->onAction(agentID, action);
@@ -81,6 +101,8 @@ int main(int argc, const char** argv) {
 			} else {
 				// Reset environment, as we will train another episode. 
 				enviroment->reset(NUM_OF_AGENTS);
+				// Update currentEpisodeProgress. 
+				currentEpisodeProgress = static_cast<double>(trainingController->getTrainedEpisodes()) / static_cast<double>(parameters->maxEpisodes);
 			}
 		}
 

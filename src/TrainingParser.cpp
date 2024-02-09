@@ -15,7 +15,7 @@ const double TrainingParser::STD_LEARNING_RATE = 0.0001;
 const uint32_t TrainingParser::STD_POLICY_STEP_LENGTH = 5;
 const uint32_t TrainingParser::STD_TRAINING_STEP_LENGTH = 120;
 const uint32_t TrainingParser::STD_MAX_EPISODE_LENGTH = 30000;
-const uint32_t TrainingParser::STD_PPO_EPOCHS = 4;
+const uint32_t TrainingParser::STD_PPO_EPOCHS = 4;	// Never 0. 
 
 void TrainingParser::parseConfigFile(const std::string& configFileName, TrainingParameters* parameters) {
 	// Read file. 
@@ -91,7 +91,10 @@ void TrainingParser::parseConfigFile(const std::string& configFileName, Training
 	}
 	if(params.contains("ppo_epochs")) {
 		parameters->ppo_epochs = params["ppo_epochs"];
-		if(parameters->trainingStepLength % parameters->ppo_epochs != 0) {
+		if(parameters->ppo_epochs == 0) {
+			std::cerr << ("TrainingParser::parseConfigFile: ppo_epochs is 0. It must have a greater value.") << std::endl;
+			abort();
+		} else if(parameters->trainingStepLength % parameters->ppo_epochs != 0) {
 			std::cerr << ("TrainingParser::parseConfigFile: trainingStepLength (" + std::to_string(parameters->trainingStepLength) + ") is not a multiples of ppo_epochs (" + std::to_string(parameters->ppo_epochs) + ").") << std::endl;
 			abort();
 		}
@@ -99,4 +102,13 @@ void TrainingParser::parseConfigFile(const std::string& configFileName, Training
 		parameters->ppo_epochs = STD_PPO_EPOCHS;
 	}
 	parameters->ppo_miniBatchSize = parameters->trainingStepLength / parameters->ppo_epochs;
+	if(params.contains("epsilonGreedyEnabled")) {
+		parameters->epsilonGreedyEnabled = params["epsilonGreedyEnabled"];
+	}
+	if(params.contains("epsilonGreedyStart")) {
+		parameters->epsilonGreedyStart = params["epsilonGreedyStart"];
+	}
+	if(params.contains("epsilonGreedyEnd")) {
+		parameters->epsilonGreedyEnd = params["epsilonGreedyEnd"];
+	}
 }

@@ -29,5 +29,7 @@ namespace PLANS {
 			void setSeed(Seed seed);
 			uint32_t nextUInt(uint32_t bound = UINT32_MAX);
 			int32_t nextIntInRange(int32_t minimum, int32_t maximum);
+			float nextFloat();
+			float nextFloatInRange(float minimum, float maximum);
 	};
 }

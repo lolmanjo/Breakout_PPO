@@ -23,6 +23,9 @@ namespace PLANS {
 		double ppo_beta;
 		uint32_t ppo_epochs;
 		uint32_t ppo_miniBatchSize;		// Calculated automatically (trainingStepLength / ppo_epochs). 
+		bool epsilonGreedyEnabled;
+		double epsilonGreedyStart;
+		double epsilonGreedyEnd;
 	};
 
 }

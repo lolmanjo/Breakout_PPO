@@ -24,6 +24,10 @@ namespace PLANS {
 			static T min(T a, T b) {
 				return a < b ? a : b;
 			}
+			template<typename T>
+			static T clamp(T value, T minimum, T maximum) {
+				return max(minimum, min(maximum, value));
+			}
 		protected:
 		private:
 	};

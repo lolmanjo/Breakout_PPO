@@ -14,6 +14,7 @@ namespace PLANS {
 			virtual void reset(uint32_t numOfAgents) = 0;
 			virtual void update() = 0;
 			virtual void getInputData(AGENT_ID agentID, std::vector<float>& data) = 0;
+			virtual float getActionMax() = 0;		// Maximum allowed value for the "action" parameter of "onAction(AGENT_ID, float)". May be FLT_MAX. Must be positive. 
 			virtual void onAction(AGENT_ID agentID, float action) = 0;
 			virtual float rewardAgent(AGENT_ID agentID) = 0;
 			virtual bool gameOver() = 0;
@@ -36,6 +37,7 @@ namespace PLANS {
 			virtual void reset(uint32_t numOfAgents) final override;
 			virtual void update() final override;
 			virtual void getInputData(AGENT_ID agentID, std::vector<float>& data) final override;
+			virtual float getActionMax() final override;
 			virtual void onAction(AGENT_ID agentID, float action) final override;
 			virtual float rewardAgent(AGENT_ID agentID) final override;
 			virtual bool gameOver() final override;
@@ -57,6 +59,7 @@ namespace PLANS {
 			virtual void reset(uint32_t numOfAgents) final override;
 			virtual void update() final override;
 			virtual void getInputData(AGENT_ID agentID, std::vector<float>& data) final override;
+			virtual float getActionMax() final override;
 			virtual void onAction(AGENT_ID agentID, float action) final override;
 			virtual float rewardAgent(AGENT_ID agentID) final override;
 			virtual bool gameOver() final override;
@@ -82,6 +85,7 @@ namespace PLANS {
 			virtual void reset(uint32_t numOfAgents) final override;
 			virtual void update() final override;
 			virtual void getInputData(AGENT_ID agentID, std::vector<float>& data) final override;
+			virtual float getActionMax() final override;
 			virtual void onAction(AGENT_ID agentID, float action) final override;
 			virtual float rewardAgent(AGENT_ID agentID) final override;
 			virtual bool gameOver() final override;
