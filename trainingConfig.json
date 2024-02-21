@@ -1,8 +1,8 @@
 {
   "parameters": {
-    "checkpointDirectoryName": "checkpoints_v8",
-    "modelNameLoad": "Breakout-AC-PPO-v8",
-    "modelNameSave": "Breakout-AC-PPO-v8",
+    "checkpointDirectoryName": "checkpoints_v9",
+    "modelNameLoad": "Breakout-AC-PPO-v9",
+    "modelNameSave": "Breakout-AC-PPO-v9",
     "learningRate": 0.0005,
     "policyStepLength": 1,
     "trainingStepLength": 8,
