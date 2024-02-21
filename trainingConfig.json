@@ -14,7 +14,7 @@
     "ppo_lambda": 0.9,
     "ppo_epochs": 4,
     "epsilonGreedyEnabled": true,
-    "epsilonGreedyStart": 0.5,
-    "epsilonGreedyEnd": 0.05
+    "epsilonGreedyStart": 0.9,
+    "epsilonGreedyEnd": 0.01
   }
 }
