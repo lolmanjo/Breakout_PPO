@@ -25,7 +25,6 @@ namespace PLANS {
 			uint32_t episodesTillCheckpoint;
 			AEX::ArrayList<double> lastEpisodeRewards;
 
-			void rewardAgent(Agent* agent, bool didTakeAction, Environment* enviroment);
 			// Called after every optimizer step to reset the rewards and values of the agents. 
 			void resetAgentTrainingStep(Agent* agent);
 			double calculateAverage(const AEX::ArrayList<double>& values) const;

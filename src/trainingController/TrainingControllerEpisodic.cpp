@@ -159,13 +159,6 @@ bool TrainingControllerEpisodic::onActionRequired(AGENT_ID agentID, std::vector<
 	// Copy output tensor to CPU for faster access while decoding. 
 	actorOutput = actorOutput.to(torch::kCPU);
 
-	// Process outputs to action. 
-	uint32_t delay = 0;
-	float action = TrainingEncoder::decodeAction(agent->agentID, actorOutput);
-
-	// Reward agent. Accumulate rewards from occured events, which will be deleted now. 
-	rewardAgent(agent, action != UINT8_MAX, getEnvironment());
-
 	// Fill output vector. 
 	output.push_back(actorOutput);
 	output.push_back(criticOutput);
@@ -173,7 +166,15 @@ bool TrainingControllerEpisodic::onActionRequired(AGENT_ID agentID, std::vector<
 	return true;
 }
 
-void TrainingControllerEpisodic::onAgentExecuted(AGENT_ID agentID) {}
+void TrainingControllerEpisodic::onAgentExecuted(AGENT_ID agentID) {// Determine reward via rewarder. 
+	double reward = TrainingRewarder::calculateReward(agentID, true, getEnvironment());
+
+	// Add reward to agent. 
+	Agent* agent = getAgents()[agentID];
+	agent->rewards.push_back(reward);
+	agent->totalReward += reward;
+	agent->rewardsCount++;
+}
 
 bool TrainingControllerEpisodic::onGameTickPassed() {
 	// Update stepsTillAction. 
@@ -224,16 +225,6 @@ void TrainingControllerEpisodic::cleanUpInternal() {
 		delete agent;
 	}
 	getAgents().clear();
-}
-
-void TrainingControllerEpisodic::rewardAgent(Agent* agent, bool didTakeAction, Environment* enviroment) {
-	// Determine reward via rewarder. 
-	double reward = TrainingRewarder::calculateReward(agent->agentID, didTakeAction, enviroment);
-
-	// Add reward to agent. 
-	agent->rewards.push_back(reward);
-	agent->totalReward += reward;
-	agent->rewardsCount++;
 }
 
 void TrainingControllerEpisodic::resetAgentTrainingStep(Agent* agent) {
