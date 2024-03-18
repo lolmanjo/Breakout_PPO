@@ -1,20 +1,20 @@
 {
   "parameters": {
-    "checkpointDirectoryName": "checkpoints_v10",
-    "modelNameLoad": "Breakout-AC-PPO-v10",
-    "modelNameSave": "Breakout-AC-PPO-v10",
-    "learningRate": 0.002,
+    "checkpointDirectoryName": "checkpoints_v11",
+    "modelNameLoad": "Breakout-AC-PPO-v11",
+    "modelNameSave": "Breakout-AC-PPO-v11",
+    "learningRate": 0.001,
     "policyStepLength": 1,
     "trainingStepLength": 8,
     "maxEpisodeLength": 120000,
     "episodesPerCheckpoint": 100,
-    "maxEpisodes": 600000,
+    "maxEpisodes": 300000,
     "continueLogFile": true,
     "ppo_gamma": 0.99,
     "ppo_lambda": 0.9,
     "ppo_epochs": 4,
     "epsilonGreedyEnabled": true,
-    "epsilonGreedyStart": 0.5,
-    "epsilonGreedyEnd": 0.01
+    "epsilonGreedyStart": 0.9,
+    "epsilonGreedyEnd": 0.00
   }
 }
