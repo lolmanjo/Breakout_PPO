@@ -106,8 +106,8 @@ bool EnvironmentFloat::gameOver() {
 
 EnvironmentBreakout::EnvironmentBreakout() : ale(), reward() {
 	// Prepare interface. 
-	ale.setInt("random_seed", 123);
-	ale.setFloat("repeat_action_probability", 0.25);
+	ale.setInt("random_seed", Random().nextIntInRange(1, 123));
+	ale.setFloat("repeat_action_probability", 0.0F);
 	ale.loadROM("./roms/Breakout.bin");
 	// Get the vector of legal actions. 
 	legal_actions = ale.getMinimalActionSet();
@@ -124,6 +124,7 @@ bool EnvironmentBreakout::onlyFinalReward() {
 
 void EnvironmentBreakout::reset(uint32_t numOfAgents) {
 	ale.reset_game();
+	ale.setInt("random_seed", Random().nextIntInRange(1, 123));
 }
 
 void EnvironmentBreakout::update() {}
